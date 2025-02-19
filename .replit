@@ -2,3 +2,18 @@ modules = ["python-3.11"]
 
 [nix]
 channel = "stable-24_05"
+
+[workflows]
+runButton = "Django Server"
+
+[[workflows.workflow]]
+name = "Django Server"
+author = 4748594
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py runserver 0.0.0.0:3000"
+
+[[ports]]
+localPort = 3000
+externalPort = 80
