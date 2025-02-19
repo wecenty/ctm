@@ -2,7 +2,6 @@ from decimal import Decimal
 from collections import defaultdict
 import xlsxwriter
 from io import BytesIO
-from django.db.models import Sum
 from .models import Catalog, Project, ProjectTool
 
 

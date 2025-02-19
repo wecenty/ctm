@@ -1,8 +1,0 @@
-modules = ["python-3.12", "web"]
-run = "run dev"
-
-[nix]
-channel = "stable-24_05"
-
-[deployment]
-run = ["sh", "-c", "run dev"]
