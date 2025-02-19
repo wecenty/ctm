@@ -13,6 +13,3 @@ __pycache__/
 .idea/
 .vscode/
 
-# Статические файлы (если они генерируются)
-staticfiles/
-static/
