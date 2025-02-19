@@ -1,0 +1,473 @@
+/* Основные стили */
+.sidebar {
+    width: 20%;
+    min-width: 350px;
+    min-height: calc(100vh - 56px);
+    background: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+}
+
+#tree {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+/* Стили для TreeView */
+.list-group-item {
+    border: none;
+    padding: 0.5rem 1rem;
+}
+
+.treeview .list-group-item {
+    cursor: pointer;
+    padding: 8px 12px;
+}
+
+.treeview .list-group-item:hover {
+    background-color: #e9ecef;
+}
+
+.treeview .node-selected {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+/* Иконки для каталогов и проектов */
+.catalog-node::before {
+    content: "📁";
+    margin-right: 5px;
+}
+
+.project-node::before {
+    content: "📄";
+    margin-right: 5px;
+}
+
+/* Иконки */
+.bi {
+    font-size: 1.2em;
+    margin-right: 5px;
+}
+
+.bi-plus-square, .bi-dash-square {
+    color: #0d6efd;
+    cursor: pointer;
+}
+
+/* Стили для поиска */
+#projectSearch {
+    border-right: none;
+}
+
+#clearSearch {
+    border-left: none;
+    padding: 0.25rem 0.5rem;
+}
+
+#clearSearch:hover {
+    background-color: transparent;
+    color: #dc3545;
+}
+
+/* Стили для результатов поиска */
+#searchResults {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.search-result-item:hover {
+    background-color: #f8f9fa;
+}
+
+.search-result-item.active {
+    background-color: #e9ecef;
+}
+
+.search-highlight {
+    background-color: #fff3cd;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+.no-results {
+    padding: 8px 12px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Стили для значков типа элемента в поиске */
+.item-icon {
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+/* Дополнительные стили для дерева */
+.tree-indent {
+    margin-left: 20px;
+}
+
+.catalog-name {
+    font-weight: 500;
+}
+
+.modal-form .alert {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.modal-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-form .help-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.modal-form .invalid-feedback {
+    display: block;
+}
+
+/* Увеличиваем размер модального окна для форм */
+.modal-dialog {
+    max-width: 600px;
+}
+
+.modal-form .tool-info {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.modal-form .tool-info h6 {
+    margin-bottom: 0.5rem;
+}
+
+.modal-form .tool-info ul {
+    margin-bottom: 0;
+}
+
+.modal-dialog.modal-lg {
+    max-width: 800px;
+}
+
+.edit-form .form-group label {
+    font-weight: 500;
+}
+
+/* Анимации для модальных окон */
+.modal.fade .modal-dialog {
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Улучшенные стили для модальных окон */
+.modal-content {
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+    padding: 1rem 1.5rem;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+    padding: 1rem 1.5rem;
+}
+
+/* Улучшенные стили для форм в модальных окнах */
+.modal-form .form-control {
+    border-radius: 6px;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.modal-form .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* Эффекты наведения для кнопок */
+.modal-form .btn {
+    transition: transform 0.2s ease-in-out;
+}
+
+.modal-form .btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Индикатор загрузки */
+.modal-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.modal-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #0d6efd;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Улучшенные стили для алертов в модальных окнах */
+.modal-form .alert {
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modal-form .alert-info {
+    background-color: #e8f4fd;
+    color: #084298;
+}
+
+/* Анимация для сообщений об успехе */
+.success-message {
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideDown 0.5s ease forwards;
+}
+
+@keyframes slideDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.catalog-form .form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.catalog-form .parent-select {
+    position: relative;
+}
+
+.catalog-form .parent-select::after {
+    content: '📁';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* Стили для формы инструмента */
+.tool-form .resource-group {
+    position: relative;
+}
+
+.tool-form .numeric-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.tool-form .numeric-input .unit {
+    position: absolute;
+    right: 10px;
+    color: #6c757d;
+}
+
+.tool-form .dimension-group {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Стили для формы инструмента проекта */
+.project-tool-form .tool-preview {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.project-tool-form .tool-preview.active {
+    background: #e8f4fd;
+    border-left: 4px solid #0d6efd;
+}
+
+/* Анимации для подсказок */
+.tooltip-animated {
+    position: relative;
+}
+
+.tooltip-animated::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.tooltip-animated:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.time-slider {
+    width: 100%;
+    margin: 15px 0;
+}
+
+.time-marks {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Стили для превью инструмента */
+.tool-preview {
+    transition: all 0.3s ease-in-out;
+}
+
+.tool-preview-icon {
+    color: #0d6efd;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.tool-preview:hover .tool-preview-icon {
+    transform: rotate(45deg);
+    opacity: 1;
+}
+
+/* Анимация для расчета количества */
+.calculation-preview {
+    overflow: hidden;
+}
+
+.calculation-preview .display-4 {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Улучшенные стили для Select2 */
+.select2-container--bootstrap-5 .select2-selection {
+    border-radius: 6px;
+    border-color: #dee2e6;
+}
+
+.select2-container--bootstrap-5 .select2-selection:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Стили для числовых инпутов */
+.numeric-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.numeric-controls {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 5px;
+}
+
+.numeric-controls button {
+    padding: 0 5px;
+    line-height: 1;
+    font-size: 12px;
+}
+
+.unit {
+    position: absolute;
+    right: 60px;
+    color: #6c757d;
+}
+
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    z-index: 1050;
+    opacity: 0;
+    transform: translateY(100px);
+    animation: slideUp 0.3s ease forwards;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast-notification.success {
+    background-color: #28a745;
+}
+
+.toast-notification.error {
+    background-color: #dc3545;
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
