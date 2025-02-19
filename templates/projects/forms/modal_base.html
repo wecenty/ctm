@@ -1,0 +1,14 @@
+{% load bootstrap4 %}
+<form method="post" action="{{ form_action }}" class="modal-form {% block form_class %}{% endblock %}">
+    {% csrf_token %}
+    {% block form_content %}
+        {% bootstrap_form form %}
+    {% endblock %}
+    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" class="btn btn-primary">
+            {% if is_edit %}Сохранить{% else %}{{ submit_label|default:"Создать" }}{% endif %}
+        </button>
+    </div>
+</form>

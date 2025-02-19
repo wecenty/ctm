@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Управление проектами{% endblock %}</title>
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-treeview/bootstrap-treeview.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+</head>
+<body>
+{% include 'includes/navbar.html' %}
+{% include 'includes/delete_confirmation_modal.html' %}
+<div class="d-flex">
+    {% if user.is_authenticated %}
+        {% if perms.projects.view_project %}  {# Добавляем проверку разрешения #}
+            {% include 'includes/sidebar.html' %}
+        {% endif %}
+    {% endif %}
+
+    <div class="flex-grow-1 p-3">
+        {% include 'includes/messages.html' %}
+        {% block main_content %}{% endblock %}
+    </div>
+</div>
+
+<script src="{% static 'vendor/jquery/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap-treeview/bootstrap-treeview.min.js' %}"></script>
+<script>
+    // Проверяем, что jQuery загружен
+    $(document).ready(function () {
+        console.log('jQuery успешно загружен. Версия:', $.fn.jquery);
+    });
+    const treeDataUrl = "{% url 'get_tree_json' %}";
+</script>
+<script src="{% static 'js/tree.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        initializeTree({{ current_project.id|default:"null" }});
+    });
+</script>
+<!-- Общее модальное окно для форм -->
+<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Сюда будет загружаться форма -->
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/notifications.js' %}"></script>
+<script src="{% static 'js/modal-forms.js' %}"></script>
+<script src="{% static 'js/delete-handlers.js' %}"></script>
+</body>
+</html>

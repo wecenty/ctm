@@ -1,0 +1,53 @@
+{% extends 'projects/base_projects.html' %}
+{% load bootstrap4 %}
+
+<form method="post" action="{% url 'project_create' catalog.pk %}">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" class="btn btn-primary">
+            {% if is_edit %}Сохранить{% else %}Создать{% endif %}
+        </button>
+    </div>
+</form>
+
+{% block project_content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">
+                    {% if is_edit %}
+                        Редактирование проекта
+                    {% else %}
+                        Создание нового проекта
+                    {% endif %}
+                </h4>
+                {% if not is_edit %}
+                    <div class="text-muted">
+                        в каталоге "{{ catalog.name }}"
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <button type="submit" class="btn btn-primary">
+                        {% if is_edit %}
+                            Сохранить
+                        {% else %}
+                            Создать
+                        {% endif %}
+                    </button>
+                    <a href="{% if is_edit %}{% url 'project_detail' object.pk %}{% else %}{% url 'catalog_detail' catalog.pk %}{% endif %}" 
+                       class="btn btn-secondary">
+                        Отмена
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

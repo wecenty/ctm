@@ -1,0 +1,70 @@
+{% extends 'projects/base_projects.html' %}
+{% load bootstrap4 %}
+
+{% block project_content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">
+                    {% if is_edit %}
+                        Редактирование инструмента в проекте
+                    {% else %}
+                        Добавление инструмента в проект
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Количество инструментов будет рассчитано автоматически по формуле:
+                    <br>
+                    <strong>(Ресурс инструмента / Время применения) × Количество проектов</strong>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <button type="submit" class="btn btn-primary">
+                        {% if is_edit %}
+                            Сохранить
+                        {% else %}
+                            Добавить в проект
+                        {% endif %}
+                    </button>
+                    <a href="{% url 'project_detail' project.pk %}" class="btn btn-secondary">Отмена</a>
+                </form>
+
+                {% if form.instance.tool %}
+                <div class="mt-3">
+                    <h5>Параметры выбранного инструмента:</h5>
+                    <ul>
+                        <li>Ресурс: {{ form.instance.tool.resource }} использований</li>
+                        <li>Диаметр: {{ form.instance.tool.diameter }} мм</li>
+                        <li>Длина: {{ form.instance.tool.length }} мм</li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Добавляем JavaScript для динамической загрузки информации об инструменте
+$(document).ready(function() {
+    const toolSelect = $('select[name="tool"]');
+    const infoDiv = $('#tool-info');
+    
+    toolSelect.change(function() {
+        const selectedOption = $(this).find('option:selected');
+        if (selectedOption.val()) {
+            // Здесь можно добавить AJAX-запрос для получения дополнительной информации об инструменте
+            // и обновления отображаемой информации
+        }
+    });
+});
+</script>
+{% endblock %}

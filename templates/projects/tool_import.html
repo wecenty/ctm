@@ -1,0 +1,132 @@
+{% extends 'projects/base_projects.html' %}
+{% load bootstrap4 %}
+
+{% block project_content %}
+<div class="card">
+   <div class="card-header">
+       <h4 class="card-title">Импорт инструментов</h4>
+   </div>
+   <div class="card-body">
+       <div class="alert alert-info">
+           <h5 class="alert-heading">Инструкция по импорту:</h5>
+           <p>1. Скачайте пример файла для импорта</p>
+           <p>2. Заполните файл своими данными, следуя формату примера</p>
+           <p>3. Загрузите заполненный файл и нажмите "Проверить файл"</p>
+           <p>4. После успешной проверки нажмите "Импортировать"</p>
+           <hr>
+           <a href="{% url 'tool_import_example' %}" class="btn btn-success">
+               <i class="bi bi-file-earmark-excel me-2"></i>Скачать пример файла
+           </a>
+       </div>
+
+       <form method="post" enctype="multipart/form-data">
+           {% csrf_token %}
+           
+           {% if not preview_data %}
+               {% bootstrap_form form %}
+           {% else %}
+               <input type="hidden" name="file" value="{{ filename }}">
+               <div class="alert alert-info">
+                   <i class="bi bi-file-earmark me-2"></i>
+                   Выбранный файл: {{ filename }}
+               </div>
+
+               <div class="alert {% if invalid_rows %}alert-warning{% else %}alert-success{% endif %} mb-3">
+                   <h6 class="alert-heading">Результаты проверки:</h6>
+                   <p class="mb-0">
+                       Найдено строк для импорта: {{ valid_rows }}
+                       {% if invalid_rows %}
+                           <br>Строк с ошибками: {{ invalid_rows }}
+                           <br><small class="text-muted">* Строки с ошибками будут пропущены при импорте</small>
+                       {% endif %}
+                   </p>
+               </div>
+           {% endif %}
+
+           {% if not preview_data %}
+               <button type="submit" name="validate" class="btn btn-primary">
+                   <i class="bi bi-check-circle me-2"></i>Проверить файл
+               </button>
+           {% endif %}
+           
+           {% if preview_data %}
+               <div class="table-responsive mt-4">
+                   <table class="table">
+                       <thead>
+                           <tr>
+                               <th>Строка</th>
+                               <th>Артикул</th>
+                               <th>Название</th>
+                               <th>Ресурс</th>
+                               <th>Диаметр</th>
+                               <th>Длина</th>
+                               <th>Статус</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           {% for row in preview_data %}
+                               <tr class="{% if row.errors %}table-danger{% endif %}">
+                                   <td>{{ row.row_number }}</td>
+                                   <td>{{ row.article }}</td>
+                                   <td>{{ row.name }}</td>
+                                   <td>{{ row.resource }}</td>
+                                   <td>{{ row.diameter }}</td>
+                                   <td>{{ row.length }}</td>
+                                   <td>
+                                       {% if row.errors %}
+                                           <ul class="list-unstyled text-danger mb-0">
+                                               {% for error in row.errors %}
+                                                   <li>{{ error }}</li>
+                                               {% endfor %}
+                                           </ul>
+                                       {% else %}
+                                           <span class="text-success">
+                                               <i class="bi bi-check-circle me-1"></i>OK
+                                           </span>
+                                       {% endif %}
+                                   </td>
+                               </tr>
+                           {% endfor %}
+                       </tbody>
+                   </table>
+               </div>
+
+               {% if is_valid %}
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <button type="submit" name="import" class="btn btn-success" onclick="handleImport(event)">
+                                <i class="bi bi-upload me-2"></i>Импортировать
+                            </button>
+
+                            <a href="{% url 'tool_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Отмена
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <button type="submit" name="import" class="btn btn-success mt-3" onclick="handleImport(event)">
+                                <i class="bi bi-upload me-2"></i>Импортировать валидные строки ({{ valid_rows }})
+                            </button>
+                            <a href="{% url 'tool_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Отмена
+                            </a>
+                        </div>
+                    {% endif %}
+           {% endif %}
+       </form>
+
+       {% if errors %}
+           <div class="alert alert-danger mt-4">
+               <h5>
+                   <i class="bi bi-exclamation-triangle me-2"></i>
+                   Обнаружены ошибки:
+               </h5>
+               <ul class="mb-0">
+                   {% for error in errors %}
+                       <li>{{ error }}</li>
+                   {% endfor %}
+               </ul>
+           </div>
+       {% endif %}
+   </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+<div class="sidebar p-3 d-flex flex-column">
+    <div class="flex-grow-1">
+        <h5>Каталоги и проекты</h5>
+        <div class="mb-3 position-relative">
+            <div class="input-group">
+                <input type="text"
+                       id="projectSearch"
+                       class="form-control form-control-sm"
+                       placeholder="Поиск..."
+                       autocomplete="off">
+                <button class="btn btn-outline-secondary btn-sm"
+                        type="button"
+                        id="clearSearch">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div id="searchResults" class="position-absolute w-100 mt-1 d-none">
+            </div>
+        </div>
+        <div id="tree" data-url="{% url 'get_tree_json' %}"></div>
+    </div>
+    {% if perms.projects.add_catalog %}
+        <div class="mt-auto border-top pt-3">
+            <a href="{% url 'catalog_create' %}"
+               class="btn btn-primary w-100"
+               data-modal-form
+               data-modal-title="Создание нового каталога">
+                <i class="bi bi-plus-circle me-2"></i>Создать каталог
+            </a>
+        </div>
+    {% endif %}
+</div>

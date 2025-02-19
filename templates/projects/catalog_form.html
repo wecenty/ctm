@@ -1,0 +1,37 @@
+{% extends 'projects/base_projects.html' %}
+{% load bootstrap4 %}
+
+{% block project_content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">
+                    {% if is_edit %}
+                        Редактирование каталога
+                    {% else %}
+                        Создание нового каталога
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <button type="submit" class="btn btn-primary">
+                        {% if is_edit %}
+                            Сохранить
+                        {% else %}
+                            Создать
+                        {% endif %}
+                    </button>
+                    <a href="{% if is_edit %}{% url 'catalog_detail' catalog.pk %}{% else %}{% url 'catalog_list' %}{% endif %}" 
+                       class="btn btn-secondary">
+                        Отмена
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

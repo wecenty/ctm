@@ -1,0 +1,50 @@
+{% load bootstrap4 %}
+<form method="post" 
+      action="{% if is_edit %}{% url 'project_tool_edit' project.pk tool_info.pk %}{% else %}{% url 'project_tool_add' project.pk %}{% endif %}"
+      class="modal-form project-tool-form"
+      data-project-quantity="{{ project.quantity }}">
+    {% csrf_token %}
+
+    <div class="tool-preview mb-3">
+        <!-- Здесь будет отображаться информация о выбранном инструменте -->
+        {% if tool_info %}
+            <div class="row">
+                <div class="col-md-8">
+                    <h6>{{ tool_info.name }}</h6>
+                    <div class="small text-muted">
+                        <div>Диаметр: {{ tool_info.diameter }}мм</div>
+                        <div>Длина: {{ tool_info.length }}мм</div>
+                        <div>Ресурс: {{ tool_info.resource }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="tool-preview-icon text-center">
+                        <i class="bi bi-tools" style="font-size: 2rem;"></i>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {% bootstrap_field form.tool %}
+    </div>
+
+    <div class="form-group">
+        {% bootstrap_field form.application_time %}
+        <div class="time-display text-center mt-2">
+            <span class="current-time">60</span> секунд
+        </div>
+    </div>
+
+    <div class="calculation-preview mt-3">
+        <!-- Здесь будет отображаться предварительный расчет количества -->
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" class="btn btn-primary">
+            {% if is_edit %}Сохранить{% else %}Добавить в проект{% endif %}
+        </button>
+    </div>
+</form>

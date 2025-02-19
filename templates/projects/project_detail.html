@@ -1,0 +1,195 @@
+{% extends 'projects/base_projects.html' %}
+
+{% block project_content %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <h4 class="card-title mb-0 me-2">{{ project.name }}</h4>
+                <div class="badges">
+                    {% if project.version > 0 %}
+                        <span class="badge bg-info me-2">вер. {{ project.version }}</span>
+                    {% endif %}
+                    {% if project.quantity > 1 %}
+                        <span class="badge bg-secondary me-2">x{{ project.quantity }}</span>
+                    {% endif %}
+                </div>
+                <span class="ms-2 text-muted">({{ project.catalog.name }})</span>
+                {% if perms.projects.change_project %}
+                    <a href="{% url 'project_edit' project.pk %}"
+                       class="btn btn-sm btn-primary ms-2"
+                       data-modal-form
+                       data-modal-title="Редактирование проекта">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                {% endif %}
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'export_project_tools' project.pk %}" class="btn btn-sm btn-success sm-2">
+                    <i class="bi bi-file-excel me-1"></i>.XLS
+                </a>
+                {% if perms.projects.add_projecttool %}
+                    <a href="{% url 'project_tool_add' project.pk %}"
+                       class="btn btn-sm btn-primary sm-2"
+                       data-modal-form
+                       data-modal-title="Добавление инструмента">
+                        <i class="bi bi-plus-circle me-1"></i>Инструмент
+                    </a>
+                {% endif %}
+                {% if perms.projects.delete_project %}
+                    <form method="post"
+                          action="{% url 'project_delete' project.pk %}"
+                          data-delete-form
+                          data-entity-type="проект"
+                          data-entity-name="{{ project.name }}"
+                          data-redirect-url="{% url 'catalog_detail' project.catalog.pk %}"
+                          class="d-inline-block">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger sm-2">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Артикул</th>  <!-- Добавляем новую колонку -->
+                        <th>Название</th>
+                        <th>Диаметр (мм)</th>
+                        <th>Длина (мм)</th>
+                        <th>Ресурс</th>
+                        <th>Количество</th>
+                        <th>Время (сек)</th>
+                        <th>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for tool in tools %}
+                        <tr>
+                            <td>{{ tool.tool.article }}</td>  <!-- Добавляем вывод артикула -->
+                            <td>{{ tool.tool.name }}</td>
+                            <td>{{ tool.tool.diameter }}</td>
+                            <td>{{ tool.tool.length }}</td>
+                            <td>{{ tool.tool.resource }}</td>
+                            <td>{{ tool.quantity|floatformat:2 }}</td>
+                            <td>{{ tool.application_time }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-secondary"
+                                            onclick="copyToolString(
+                                                    '{{ tool.tool.name }}',
+                                                    '{{ tool.tool.diameter }}',
+                                                    '{{ tool.tool.length }}',
+                                                    '{{ tool.tool.resource }}',
+                                                    '{{ tool.quantity|floatformat:2 }}',
+                                                    '{{ tool.application_time }}'
+                                                    )">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                    {% if perms.projects.change_projecttool %}
+                                        <a href="{% url 'project_tool_edit' project.id tool.id %}"
+                                           class="btn btn-sm btn-primary"
+                                           data-modal-form
+                                           data-modal-title="Редактирование инструмента">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.projects.delete_projecttool %}
+                                        <form method="post"
+                                              action="{% url 'project_tool_delete' project.id tool.id %}"
+                                              data-delete-form
+                                              data-entity-type="инструмент"
+                                              data-entity-name="{{ tool.tool.name }}"
+                                              class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Нет добавленных инструментов</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Подтверждение удаления</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы уверены, что хотите удалить проект "{{ project.name }}"?</p>
+                    {% if project.quantity > 1 %}
+                        <p class="text-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Внимание: будут удалены все {{ project.quantity }} экземпляров проекта.
+                        </p>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <form method="post"
+                          action="{% url 'project_delete' project.pk %}"
+                          data-delete-form
+                          data-entity-type="проект"
+                          data-entity-name="{{ project.name }}"
+                          data-redirect-url="{% url 'catalog_detail' project.catalog.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete() {
+            var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            deleteModal.show();
+        }
+
+        function copyToolString(name, diameter, length, resource, quantity, time) {
+            const toolString = `${name}:⌀${diameter}мм:L${length}мм:Ресурс=${resource}:Кол-во=${quantity}:Время=${time}сек`;
+            navigator.clipboard.writeText(toolString)
+                .then(() => {
+                    const toast = document.createElement('div');
+                    toast.style.position = 'fixed';
+                    toast.style.bottom = '20px';
+                    toast.style.right = '20px';
+                    toast.style.backgroundColor = '#28a745';
+                    toast.style.color = 'white';
+                    toast.style.padding = '10px 20px';
+                    toast.style.borderRadius = '5px';
+                    toast.style.zIndex = '1000';
+                    toast.textContent = 'Скопировано в буфер обмена!';
+
+                    document.body.appendChild(toast);
+
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Ошибка при копировании:', err);
+                    alert('Не удалось скопировать в буфер обмена');
+                });
+        }
+    </script>
+{% endblock %}

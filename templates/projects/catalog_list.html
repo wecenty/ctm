@@ -1,0 +1,83 @@
+{% extends 'projects/base_projects.html' %}
+
+{% block project_content %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Каталоги</h4>
+            {% if perms.projects.add_catalog %}
+                <a href="{% url 'catalog_create' %}"
+                   class="btn btn-sm btn-primary sm-2"
+                   data-modal-form
+                   data-modal-title="Создание нового каталога">
+                    <i class="bi bi-plus-circle me-2"></i>Создать каталог
+                </a>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% if catalogs %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Создатель</th>
+                            <th>Дата создания</th>
+                            <th>Количество проектов</th>
+                            <th>Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for catalog in catalogs %}
+                            <tr>
+                                <td>{{ catalog.name }}</td>
+                                <td>{{ catalog.creator.username }}</td>
+                                <td>{{ catalog.created_at|date:"d.m.Y H:i" }}</td>
+                                <td>{{ catalog.projects.count }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'catalog_detail' catalog.pk %}" class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        {% if perms.projects.change_catalog %}
+                                            <a href="{% url 'catalog_edit' catalog.pk %}"
+                                               class="btn btn-sm btn-primary">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if perms.projects.delete_catalog %}
+                                            <form method="post"
+                                                  action="{% url 'catalog_delete' catalog.pk %}"
+                                                  data-delete-form
+                                                  data-entity-type="каталог"
+                                                  data-entity-name="{{ catalog.name }}"
+                                                  data-redirect-url="{% url 'catalog_list' %}"
+                                                  class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    Пока нет созданных каталогов.
+                    {% if perms.projects.add_catalog %}
+                        <a href="{% url 'catalog_create' %}"
+                           class="btn btn-primary"
+                           data-modal-form
+                           data-modal-title="Создание нового каталога">
+                            <i class="bi bi-plus-circle me-2"></i>Создать каталог
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

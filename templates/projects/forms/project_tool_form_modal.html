@@ -1,0 +1,27 @@
+{% load bootstrap4 %}
+<form method="post" action="{% if is_edit %}{% url 'project_tool_edit' project.id tool_info.id %}{% else %}{% url 'project_tool_add' project.pk %}{% endif %}" class="modal-form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% if tool_info %}
+    <div class="mt-3">
+        <h6>Параметры инструмента:</h6>
+        <ul class="list-unstyled">
+            <li>Ресурс: {{ tool_info.resource }} использований</li>
+            <li>Диаметр: {{ tool_info.diameter }} мм</li>
+            <li>Длина: {{ tool_info.length }} мм</li>
+        </ul>
+    </div>
+    {% endif %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        Количество инструментов будет рассчитано автоматически по формуле:
+        <br>
+        <strong>(Ресурс инструмента / Время применения) × Количество проектов</strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" class="btn btn-primary">
+            {% if is_edit %}Сохранить{% else %}Добавить{% endif %}
+        </button>
+    </div>
+</form>

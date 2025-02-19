@@ -1,0 +1,13 @@
+{% load bootstrap4 %}
+<form method="post"
+      action="{% if is_edit %}{% url 'catalog_edit' catalog.pk %}{% else %}{% url 'catalog_create' %}{% endif %}"
+      class="modal-form catalog-form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" class="btn btn-primary">
+            {% if is_edit %}Сохранить{% else %}Создать{% endif %}
+        </button>
+    </div>
+</form>
