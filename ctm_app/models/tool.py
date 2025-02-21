@@ -2,7 +2,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Tool(models.Model):
+from .base import SoftDeletableModel
+
+class Tool(SoftDeletableModel):
     """Модель для справочника инструментов"""
     article = models.IntegerField(verbose_name="Артикул")
     name = models.CharField(max_length=200, verbose_name="Название инструмента")

@@ -2,8 +2,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from .catalog import Catalog
+from .base import SoftDeletableModel
 
-class Project(models.Model):
+class Project(SoftDeletableModel):
     name = models.CharField(max_length=200, verbose_name="Название проекта", db_index=True)
     version = models.IntegerField(default=0, verbose_name="Версия")
     quantity = models.IntegerField(default=1, verbose_name="Количество")
