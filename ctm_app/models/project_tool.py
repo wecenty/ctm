@@ -30,7 +30,7 @@ class ProjectTool(models.Model):
         if self.application_time > 0:
             try:
                 resource = Decimal(self.tool.resource)
-                application_time = Decimal(self.application_time)
+                application_time = Decimal(str(self.application_time))
                 project_quantity = Decimal(self.project.quantity)
                 return (resource / application_time * project_quantity).quantize(Decimal('0.01'))
             except (ZeroDivisionError, AttributeError):
