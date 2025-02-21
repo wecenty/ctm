@@ -21,14 +21,24 @@ class ProjectTool(models.Model):
             self.quantity = self.calculate_quantity()
         super().save(*args, **kwargs)
 
+        from decimal import Decimal
+
     def calculate_quantity(self):
-        """Рассчитывает количество инструментов по формуле"""
-        if self.application_time > 0 and hasattr(self, 'project') and hasattr(self, 'tool'):
+            """
+            Рассчитывает количество инструментов по формуле:
+              (ресурс инструмента / время применения) * количество проектов.
+            Возвращает значение с точностью до двух знаков после запятой.
+            """
+        if self.application_time > 0:
             try:
-                return Decimal(str(self.tool.resource)) / Decimal(str(self.application_time)) * Decimal(str(self.project.quantity))
+                resource = Decimal(self.tool.resource)
+                application_time = Decimal(self.application_time)
+                project_quantity = Decimal(self.project.quantity)
+                 return (resource / application_time * project_quantity).quantize(Decimal('0.01'))
             except (ZeroDivisionError, AttributeError):
                 return Decimal('0.00')
         return Decimal('0.00')
+
 
     def recalculate_quantity(self):
         """Метод для пересчета количества с сохранением в базе"""
