@@ -5,6 +5,17 @@ from .catalog import Catalog
 from .base import SoftDeletableModel
 
 class Project(SoftDeletableModel):
+    """
+    Модель проекта обработки.
+    
+    Проект может быть:
+    - Самостоятельным или иметь родительский проект (поле parent)
+    - Иметь несколько версий (поле version)
+    - Содержать количество изделий (поле quantity)
+    
+    Проекты организованы в каталоги для удобной навигации.
+    Поддерживает систему версионирования и мягкое удаление.
+    """
     name = models.CharField(max_length=200, verbose_name="Название проекта", db_index=True)
     version = models.IntegerField(default=0, verbose_name="Версия")
     quantity = models.IntegerField(default=1, verbose_name="Количество")

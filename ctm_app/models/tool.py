@@ -5,7 +5,17 @@ from django.contrib.auth.models import User
 from .base import SoftDeletableModel
 
 class Tool(SoftDeletableModel):
-    """Модель для справочника инструментов"""
+    """
+    Модель для справочника режущих инструментов.
+    
+    Содержит основные характеристики инструмента:
+    - артикул для уникальной идентификации
+    - название инструмента
+    - ресурс (время работы в минутах)
+    - геометрические параметры (диаметр, длина)
+    
+    Поддерживает мягкое удаление через SoftDeletableModel.
+    """
     article = models.IntegerField(verbose_name="Артикул")
     name = models.CharField(max_length=200, verbose_name="Название инструмента")
     resource = models.IntegerField(verbose_name="Ресурс")
